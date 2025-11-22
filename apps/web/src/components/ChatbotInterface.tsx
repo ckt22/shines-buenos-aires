@@ -1,12 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { Send, RotateCcw, Sparkles } from "lucide-react";
+import {
+  Send,
+  RotateCcw,
+  Sparkles,
+  ArrowRight,
+  Link as LinkIcon,
+} from "lucide-react";
+import Link from "next/link";
 
 interface Message {
   id: string;
   role: "assistant" | "user";
   content: string;
+  isLink?: boolean;
 }
 
 export function ChatbotInterface() {
@@ -19,6 +27,7 @@ export function ChatbotInterface() {
     },
   ]);
   const [input, setInput] = useState("");
+  const [conversationStep, setConversationStep] = useState(0);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -33,38 +42,41 @@ export function ChatbotInterface() {
     setMessages(updatedMessages);
     setInput("");
 
-    try {
-      // Call Gemini API
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          messages: updatedMessages,
-        }),
-      });
+    // Simulate AI response with timeout
+    setTimeout(() => {
+      let assistantResponse: Message;
 
-      if (!response.ok) {
-        throw new Error("Failed to get response");
+      if (conversationStep === 0) {
+        // After first user input (goal + location)
+        assistantResponse = {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content:
+            "Great! Now please paste your website link so I can analyze it.",
+        };
+        setConversationStep(1);
+      } else if (conversationStep === 1) {
+        // After website link
+        assistantResponse = {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content:
+            "Perfect! 🚀 Let me analyze your project and match you with the best KOLs.",
+          isLink: true,
+        };
+        setConversationStep(2);
+      } else {
+        // Default response for any additional messages
+        assistantResponse = {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content:
+            "Your campaign is ready! You can view it using the link above.",
+        };
       }
 
-      const data = await response.json();
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: data.message,
-      };
-      setMessages((prev) => [...prev, assistantMessage]);
-    } catch (error) {
-      console.error("Error calling chat API:", error);
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: "Sorry, I encountered an error. Please try again.",
-      };
-      setMessages((prev) => [...prev, errorMessage]);
-    }
+      setMessages((prev) => [...prev, assistantResponse]);
+    }, 2500);
   };
 
   const handleReset = () => {
@@ -77,6 +89,7 @@ export function ChatbotInterface() {
       },
     ]);
     setInput("");
+    setConversationStep(0);
   };
 
   return (
@@ -99,51 +112,100 @@ export function ChatbotInterface() {
       {/* Messages Container */}
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
         {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`flex ${
-              message.role === "user" ? "justify-end" : "justify-start"
-            }`}
-          >
-            <div
-              className={`flex gap-3 max-w-2xl ${
-                message.role === "user" ? "flex-row-reverse" : "flex-row"
-              }`}
-            >
-              {/* Avatar */}
-              <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-                  message.role === "assistant"
-                    ? "bg-gradient-to-br from-purple-500 to-indigo-600"
-                    : "bg-gray-300"
-                }`}
-              >
-                {message.role === "assistant" ? (
-                  <Sparkles className="w-5 h-5 text-white" />
-                ) : (
-                  <div className="w-5 h-5 bg-gray-500 rounded-full" />
-                )}
-              </div>
+          <div key={message.id}>
+            {message.isLink ? (
+              /* Campaign Link CTA Card */
+              <div className="space-y-4">
+                {/* Regular message bubble */}
+                <div className="flex justify-start">
+                  <div className="flex gap-3 max-w-2xl">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-purple-500 to-indigo-600">
+                      <Sparkles className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="px-6 py-4 rounded-2xl shadow-sm bg-white border border-gray-200">
+                      <p className="text-sm leading-relaxed whitespace-pre-line text-gray-800">
+                        {message.content}
+                      </p>
+                    </div>
+                  </div>
+                </div>
 
-              {/* Message Bubble */}
+                {/* CTA Card */}
+                <div className="flex justify-start">
+                  <div className="flex gap-3 max-w-2xl">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-purple-500 to-indigo-600">
+                      <Sparkles className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="bg-gradient-to-r from-purple-500 via-purple-600 to-blue-500 rounded-2xl p-6 text-center text-white shadow-lg">
+                      <div className="flex justify-center mb-3">
+                        <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+                          <LinkIcon className="w-6 h-6 text-white" />
+                        </div>
+                      </div>
+                      <h2 className="text-xl font-bold mb-2">
+                        The campaign page is ready!
+                      </h2>
+                      <p className="text-purple-100 text-sm mb-4">
+                        Check this out
+                      </p>
+                      <Link href="/campaign-details">
+                        <button className="bg-white text-purple-600 px-5 py-2.5 rounded-xl font-semibold text-sm hover:shadow-xl transition-all duration-200 hover:scale-105 inline-flex items-center gap-2">
+                          View Campaign
+                          <ArrowRight className="w-4 h-4" />
+                        </button>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* Regular message bubble */
               <div
-                className={`px-6 py-4 rounded-2xl shadow-sm ${
-                  message.role === "assistant"
-                    ? "bg-white border border-gray-200"
-                    : "bg-purple-500 text-white"
+                className={`flex ${
+                  message.role === "user" ? "justify-end" : "justify-start"
                 }`}
               >
-                <p
-                  className={`text-sm leading-relaxed whitespace-pre-line ${
-                    message.role === "assistant"
-                      ? "text-gray-800"
-                      : "text-white"
+                <div
+                  className={`flex gap-3 max-w-2xl ${
+                    message.role === "user" ? "flex-row-reverse" : "flex-row"
                   }`}
                 >
-                  {message.content}
-                </p>
+                  {/* Avatar */}
+                  <div
+                    className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      message.role === "assistant"
+                        ? "bg-gradient-to-br from-purple-500 to-indigo-600"
+                        : "bg-gray-300"
+                    }`}
+                  >
+                    {message.role === "assistant" ? (
+                      <Sparkles className="w-5 h-5 text-white" />
+                    ) : (
+                      <div className="w-5 h-5 bg-gray-500 rounded-full" />
+                    )}
+                  </div>
+
+                  {/* Message Bubble */}
+                  <div
+                    className={`px-6 py-4 rounded-2xl shadow-sm ${
+                      message.role === "assistant"
+                        ? "bg-white border border-gray-200"
+                        : "bg-purple-500 text-white"
+                    }`}
+                  >
+                    <p
+                      className={`text-sm leading-relaxed whitespace-pre-line ${
+                        message.role === "assistant"
+                          ? "text-gray-800"
+                          : "text-white"
+                      }`}
+                    >
+                      {message.content}
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         ))}
       </div>
