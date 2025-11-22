@@ -21,6 +21,10 @@ export default function CampaignDetailsPage() {
       niche: "DeFi & NFT education",
       verified: true,
       avatar: "👩",
+      verifiedAudience: "80,000",
+      engagementRate: "8%",
+      estimatedImpression: "30,000",
+      priceRange: "500 - 1000u",
     },
     {
       name: "BlockchainBob",
@@ -30,6 +34,10 @@ export default function CampaignDetailsPage() {
       niche: "Technical analysis & project reviews",
       verified: true,
       avatar: "👨",
+      verifiedAudience: "65,000",
+      engagementRate: "12%",
+      estimatedImpression: "45,000",
+      priceRange: "800 - 1500u",
     },
     {
       name: "Web3Wendy",
@@ -39,6 +47,10 @@ export default function CampaignDetailsPage() {
       niche: "Lifestyle & Web3 adoption",
       verified: true,
       avatar: "👩",
+      verifiedAudience: "120,000",
+      engagementRate: "6%",
+      estimatedImpression: "52,000",
+      priceRange: "600 - 1200u",
     },
     {
       name: "NFT_Master",
@@ -48,6 +60,10 @@ export default function CampaignDetailsPage() {
       niche: "NFT collections & gaming",
       verified: true,
       avatar: "👨",
+      verifiedAudience: "180,000",
+      engagementRate: "15%",
+      estimatedImpression: "85,000",
+      priceRange: "1000 - 2000u",
     },
   ];
 
@@ -183,7 +199,27 @@ export default function CampaignDetailsPage() {
                       <Users className="w-4 h-4" />
                       <span>{kol.followers} followers</span>
                     </div>
-                    <p className="text-gray-600 text-sm">{kol.niche}</p>
+                    <p className="text-gray-600 text-sm mb-3">{kol.niche}</p>
+                    
+                    {/* Additional Data */}
+                    <div className="mt-4 pt-4 border-t border-gray-100 space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Verified Audience Size:</span>
+                        <span className="font-semibold text-gray-900">{kol.verifiedAudience} (vlayer)</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Engagement Rate:</span>
+                        <span className="font-semibold text-gray-900">{kol.engagementRate}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Estimated impression:</span>
+                        <span className="font-semibold text-gray-900">{kol.estimatedImpression}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Price range:</span>
+                        <span className="font-semibold text-gray-900">{kol.priceRange}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

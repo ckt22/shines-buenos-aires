@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { WalletConnectButton } from "@/components/connect-button";
 
-const navLinks = [
+const navLinks: { name: string; href: string; external?: boolean }[] = [
   { name: "Project", href: "/project" },
   { name: "Verify", href: "/user-flow" },
 ];
