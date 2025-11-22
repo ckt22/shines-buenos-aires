@@ -1,41 +1,29 @@
+import { NextResponse } from "next/server";
+
+// Placeholder webhook endpoint - to be implemented with Prisma
+export async function POST(request: Request) {
+  try {
+    const payload = await request.json();
+    
+    // TODO: Implement webhook logic when Prisma is set up
+    console.log("Webhook received:", payload);
+    
+    return NextResponse.json({ 
+      success: true,
+      message: "Webhook endpoint ready - awaiting implementation" 
+    });
+  } catch (error) {
+    console.error("Webhook error:", error);
+    return NextResponse.json(
+      { error: "Webhook processing failed" },
+      { status: 500 }
+    );
+  }
+}
+
+// TODO: Implement when Prisma is configured
 // import { prisma } from "@/lib/prisma";
-
-// export async function POST(request: Request) {
-//   try {
-//     const payload = await request.json();
-
-//     // Extract data from vouch webhook
-//     const requestId = payload.requestId;
-//     const webProof = payload.webProofs?.[0]?.presentationJson;
-
-//     if (!webProof) {
-//       return Response.json({ error: "No web proof found" }, { status: 400 });
-//     }
-
-//     // Store web proof temporarily
-//     await prisma.webProof.create({
-//       data: {
-//         requestId: requestId,
-//         webProofData: webProof,
-//         status: "pending_compression",
-//       },
-//     });
-
-//     // Trigger ZK compression (can be async job)
-//     await compressAndSubmitToCelo(requestId, webProof);
-
-//     return Response.json({ success: true });
-//   } catch (error) {
-//     console.error("Webhook error:", error);
-//     return Response.json(
-//       { error: "Webhook processing failed" },
-//       { status: 500 }
-//     );
-//   }
-// }
-
 // async function compressAndSubmitToCelo(requestId: string, webProof: any) {
-//   // Step 1: Compress to ZK proof
 //   const zkResponse = await fetch(
 //     "https://zk-prover.vlayer.xyz/api/v0/compress-web-proof",
 //     {
@@ -61,10 +49,7 @@
 //       }),
 //     }
 //   );
-
 //   const { data } = await zkResponse.json();
-
-//   // Step 2: Store ZK proof for user to submit
 //   await prisma.webProof.update({
 //     where: { requestId },
 //     data: {
@@ -73,7 +58,4 @@
 //       status: "ready_for_submission",
 //     },
 //   });
-
-//   // Step 3: Notify user that proof is ready
-//   // (via websocket, polling, or redirect)
 // }
