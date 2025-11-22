@@ -5,7 +5,7 @@ Your app is now configured as a Farcaster mini app! Follow these steps to comple
 ## 1. Install Dependencies
 
 ```bash
-npm install
+pnpm install
 ```
 
 This will install the `@farcaster/frame-sdk` package.
@@ -68,12 +68,12 @@ import { useFarcaster } from "@/components/farcaster-provider";
 
 function MyComponent() {
   const { context, isReady } = useFarcaster();
-  
+
   if (isReady && context?.user) {
     console.log("Farcaster user:", context.user.username);
     console.log("User FID:", context.user.fid);
   }
-  
+
   return <div>...</div>;
 }
 ```
@@ -81,6 +81,7 @@ function MyComponent() {
 ## Testing
 
 Test your Frame locally:
+
 1. Use the Farcaster Frame validator: https://warpcast.com/~/developers/frames
 2. Enter your local URL (use ngrok for local testing)
 3. Verify all metadata is correct
