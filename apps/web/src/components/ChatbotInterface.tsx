@@ -1,0 +1,178 @@
+"use client";
+
+import { useState } from "react";
+import { Send, RotateCcw, Sparkles } from "lucide-react";
+
+interface Message {
+  id: string;
+  role: "assistant" | "user";
+  content: string;
+}
+
+export function ChatbotInterface() {
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: "1",
+      role: "assistant",
+      content:
+        "Hi! 👋 I can help you design a Web3 marketing campaign.\n\nLet's start with a few questions:\n• What is your project goal?\n• What is your target location?",
+    },
+  ]);
+  const [input, setInput] = useState("");
+
+  const handleSend = async () => {
+    if (!input.trim()) return;
+
+    const newMessage: Message = {
+      id: Date.now().toString(),
+      role: "user",
+      content: input,
+    };
+
+    const updatedMessages = [...messages, newMessage];
+    setMessages(updatedMessages);
+    setInput("");
+
+    try {
+      // Call Gemini API
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messages: updatedMessages,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to get response");
+      }
+
+      const data = await response.json();
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: data.message,
+      };
+      setMessages((prev) => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error("Error calling chat API:", error);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: "Sorry, I encountered an error. Please try again.",
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    }
+  };
+
+  const handleReset = () => {
+    setMessages([
+      {
+        id: "1",
+        role: "assistant",
+        content:
+          "Hi! 👋 I can help you design a Web3 marketing campaign.\n\nLet's start with a few questions:\n• What is your project goal?\n• What is your target location?",
+      },
+    ]);
+    setInput("");
+  };
+
+  return (
+    <div className="flex flex-col h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 p-6 rounded-t-3xl mx-4 mt-4 shadow-sm">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
+            <Sparkles className="w-7 h-7 text-white" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Campaign Assistant
+            </h1>
+            <p className="text-sm text-gray-600">Powered by AI & Vlayer ZK</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Messages Container */}
+      <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
+        {messages.map((message) => (
+          <div
+            key={message.id}
+            className={`flex ${
+              message.role === "user" ? "justify-end" : "justify-start"
+            }`}
+          >
+            <div
+              className={`flex gap-3 max-w-2xl ${
+                message.role === "user" ? "flex-row-reverse" : "flex-row"
+              }`}
+            >
+              {/* Avatar */}
+              <div
+                className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                  message.role === "assistant"
+                    ? "bg-gradient-to-br from-purple-500 to-indigo-600"
+                    : "bg-gray-300"
+                }`}
+              >
+                {message.role === "assistant" ? (
+                  <Sparkles className="w-5 h-5 text-white" />
+                ) : (
+                  <div className="w-5 h-5 bg-gray-500 rounded-full" />
+                )}
+              </div>
+
+              {/* Message Bubble */}
+              <div
+                className={`px-6 py-4 rounded-2xl shadow-sm ${
+                  message.role === "assistant"
+                    ? "bg-white border border-gray-200"
+                    : "bg-purple-500 text-white"
+                }`}
+              >
+                <p
+                  className={`text-sm leading-relaxed whitespace-pre-line ${
+                    message.role === "assistant"
+                      ? "text-gray-800"
+                      : "text-white"
+                  }`}
+                >
+                  {message.content}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Input Area */}
+      <div className="bg-white border-t border-gray-200 p-4 mx-4 mb-4 rounded-b-3xl shadow-lg">
+        <div className="flex items-center gap-3">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyPress={(e) => e.key === "Enter" && handleSend()}
+            placeholder="Type your message..."
+            className="flex-1 px-6 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-800 placeholder-gray-400"
+          />
+          <button
+            onClick={handleSend}
+            className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center hover:shadow-lg transition-all duration-200 hover:scale-105"
+          >
+            <Send className="w-5 h-5 text-white" />
+          </button>
+          <button
+            onClick={handleReset}
+            className="w-12 h-12 bg-white border border-gray-200 rounded-2xl flex items-center justify-center hover:bg-gray-50 transition-all duration-200"
+          >
+            <RotateCcw className="w-5 h-5 text-gray-600" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
