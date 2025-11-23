@@ -45,7 +45,7 @@ export async function POST(request: Request) {
   }
 }
 
-// Export helper to get verification data
-export function getVerificationData(requestId: string) {
+// Helper to get verification data (not exported - Next.js route limitation)
+function getVerificationData(requestId: string) {
   return verificationData.get(requestId);
 }
