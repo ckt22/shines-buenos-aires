@@ -1,0 +1,7 @@
+erc4626-tests/=lib/risc0-ethereum/lib/openzeppelin-contracts/lib/erc4626-tests/
+forge-std/=lib/risc0-ethereum/lib/forge-std/src/
+halmos-cheatcodes/=lib/risc0-ethereum/lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/
+openzeppelin-contracts/=lib/risc0-ethereum/lib/openzeppelin-contracts/
+risc0-ethereum/=lib/risc0-ethereum/
+risc0/contracts/=lib/risc0-ethereum/contracts/src/
+TwitterEngagementRegistry/=lib/risc0-ethereum/contracts/src/
