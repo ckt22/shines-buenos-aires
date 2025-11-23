@@ -1,12 +1,15 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 // Import the verification data from webhook
 // Note: In production, use a shared database instead of in-memory storage
 const verificationData = new Map<string, any>();
 
-export async function GET(request: Request) {
+// Mark this route as dynamic
+export const dynamic = 'force-dynamic';
+
+export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     const requestId = searchParams.get("requestId");
 
     if (!requestId) {
