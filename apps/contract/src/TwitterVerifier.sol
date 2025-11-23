@@ -208,5 +208,5 @@ contract TwitterEngagementRegistry {
         
         // Weighted score: followers * 1 + tweets * 2 + likes * 0.5 + retweets * 3
         return eng.followers + (eng.tweets * 2) + (eng.likes / 2) + (eng.retweets * 3);
-    }
-}*/
+    }*/
+}
