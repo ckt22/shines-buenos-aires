@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { Sparkles } from "lucide-react";
+import { Vouch } from "@getvouch/sdk";
 
 export function VerifyTwitter() {
+  const vouch = new Vouch();
   const [isLoading, setIsLoading] = useState(false);
 
   const startVerification = async () => {
@@ -34,19 +36,21 @@ export function VerifyTwitter() {
       const webhookBaseUrl =
         process.env.NEXT_PUBLIC_WEBHOOK_URL || window.location.origin;
 
-      // Construct Vouch URL manually
-      const params = new URLSearchParams({
+      // Construct Vouch URL
+      const verificationUrl = vouch.getStartUrl({
         requestId: requestId,
         datasourceId: datasourceId,
         customerId: customerId,
-        redirectBackUrl: `${window.location.origin}/callback?requestId=${requestId}`,
-        webhookUrl: `${webhookBaseUrl}/api/vouch-webhook`,
+        redirectBackUrl: `${window.location.origin}?requestId=${requestId}`,
+        webhookUrl: `${webhookBaseUrl}/api/web-proof`,
+        inputs: {
+          follower: 10000,
+        },
       });
 
-      const verificationUrl = `https://app.getvouch.io/verify?${params.toString()}`;
       console.log("Redirecting to:", verificationUrl);
 
-      window.location.href = verificationUrl;
+      window.location.href = verificationUrl.toString();
     } catch (error) {
       console.error("Failed to start verification:", error);
       alert(
