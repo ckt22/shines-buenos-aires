@@ -13,29 +13,29 @@ contract TwitterEngagementRegistry {
     struct UserEngagement {
         string twitterHandle;
         uint256 followers;
-        uint256 tweets;
-        uint256 likes;
-        uint256 retweets;
+        //uint256 tweets;
+        //uint256 likes;
+        //uint256 retweets;
         uint256 tlsTimestamp;
         uint256 blockNumber;
         bool verified;
     }
     
     // Mapping: user address => engagement data
-    mapping(address => UserEngagement) public engagements;
+    //mapping(address => UserEngagement) public engagements;
     
     // Mapping: twitter handle => user address (for lookup)
-    mapping(string => address) public handleToAddress;
+    //mapping(string => address) public handleToAddress;
     
     // Array for AI to iterate through all users
-    address[] public verifiedUsers;
-    mapping(address => uint256) private userIndex;
+    //address[] public verifiedUsers;
+    //mapping(address => uint256) private userIndex;
     
     event EngagementVerified(
-        address indexed user,
+        //address indexed user,
         string twitterHandle,
         uint256 followers,
-        uint256 tweets,
+        //uint256 tweets,
         uint256 timestamp
     );
     
@@ -65,13 +65,13 @@ contract TwitterEngagementRegistry {
             uint256 tlsTimestamp,
             bytes32 extractionHash,
             string memory twitterHandle,
-            uint256 followers,
-            uint256 tweets,
-            uint256 likes,
-            uint256 retweets
+            //uint256 followers,
+            //uint256 tweets,
+            //uint256 likes,
+            //uint256 retweets
         ) = abi.decode(
             journalData,
-            (bytes32, string, string, uint256, bytes32, string, uint256, uint256, uint256, uint256)
+            (bytes32, string, string, uint256, bytes32, string/*, uint256, uint256, uint256, uint256*/)
         );
         
         // Security validations
@@ -83,42 +83,42 @@ contract TwitterEngagementRegistry {
         VERIFIER.verify(seal, IMAGE_ID, sha256(journalData));
         
         // Store engagement data
-        UserEngagement memory engagement = UserEngagement({
+        /*UserEngagement memory engagement = UserEngagement({
             twitterHandle: twitterHandle,
-            followers: followers,
-            tweets: tweets,
-            likes: likes,
-            retweets: retweets,
+            //followers: followers,
+            //tweets: tweets,
+            //likes: likes,
+            //retweets: retweets,
             tlsTimestamp: tlsTimestamp,
             blockNumber: block.number,
             verified: true
-        });
+        });*/
         
         // Update mappings
-        engagements[msg.sender] = engagement;
-        handleToAddress[twitterHandle] = msg.sender;
+        //engagements[msg.sender] = engagement;
+        //handleToAddress[twitterHandle] = msg.sender;
         
         // Add to verified users array if first time
-        if (userIndex[msg.sender] == 0 && verifiedUsers.length > 0) {
+        /*if (userIndex[msg.sender] == 0 && verifiedUsers.length > 0) {
             verifiedUsers.push(msg.sender);
             userIndex[msg.sender] = verifiedUsers.length;
         } else if (verifiedUsers.length == 0) {
             verifiedUsers.push(msg.sender);
             userIndex[msg.sender] = 1;
-        }
+        }*/
         
-        emit EngagementVerified(
+        /*emit EngagementVerified(
             msg.sender,
             twitterHandle,
             followers,
             tweets,
             tlsTimestamp
-        );
+        );*/
     }
     
     // ============ AI-Friendly Read Functions ============
     
-    function getUserEngagement(address user) 
+    /*function getUserEngagement(address user) 
         external 
         view 
         returns (UserEngagement memory) 
@@ -209,4 +209,4 @@ contract TwitterEngagementRegistry {
         // Weighted score: followers * 1 + tweets * 2 + likes * 0.5 + retweets * 3
         return eng.followers + (eng.tweets * 2) + (eng.likes / 2) + (eng.retweets * 3);
     }
-}
+}*/
