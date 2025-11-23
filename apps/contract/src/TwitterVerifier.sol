@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import {IRiscZeroVerifier} from "risc0/contracts/IRiscZeroVerifier.sol";
+import {IRiscZeroVerifier} from "./IRiscZeroVerifier.sol";
 
 contract TwitterEngagementRegistry {
     IRiscZeroVerifier public immutable VERIFIER;
     bytes32 public immutable IMAGE_ID;
     bytes32 public immutable EXPECTED_NOTARY_KEY_FINGERPRINT;
     bytes32 public immutable EXPECTED_EXTRACTION_HASH;
-    string public immutable EXPECTED_URL; // Twitter API URL
+    string public EXPECTED_URL; // Twitter API URL
     
     struct UserEngagement {
         string twitterHandle;
@@ -64,7 +64,7 @@ contract TwitterEngagementRegistry {
             string memory url,
             uint256 tlsTimestamp,
             bytes32 extractionHash,
-            string memory twitterHandle,
+            string memory twitterHandle
             //uint256 followers,
             //uint256 tweets,
             //uint256 likes,
