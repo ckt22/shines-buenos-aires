@@ -43,9 +43,7 @@ export function VerifyTwitter() {
         customerId: customerId,
         redirectBackUrl: `${window.location.origin}?requestId=${requestId}`,
         webhookUrl: `${webhookBaseUrl}/api/web-proof`,
-        inputs: {
-          follower: 10000,
-        },
+        inputs: {},
       });
 
       console.log("Redirecting to:", verificationUrl);
