@@ -33,9 +33,9 @@ export default function CallbackPage() {
           // Mark user as verified
           localStorage.setItem("userVerified", "true");
           
-          // Redirect to user flow (campaign page) after 2 seconds
+          // Redirect to campaigns page after 2 seconds
           setTimeout(() => {
-            router.push("/user-flow");
+            router.push("/campaigns");
           }, 2000);
         } else if (data.status === "failed") {
           setStatus("error");
